@@ -1,0 +1,35 @@
+<div class="flex items-center justify-between">
+    <h6 class="modal-title text-[1rem] font-semibold" mat-dialog-title>Modal title</h6>
+    <button mat-dialog-close type="button"
+        class="hs-dropdown-toggle text-[1rem] font-semibold text-defaulttextcolor pr-4" data-hs-overlay="#todo-compose">
+        <span class="sr-only">Close</span>
+        <i class="ri-close-line"></i>
+    </button>
+</div>
+
+<mat-dialog-content>
+    <app-dynamic-form></app-dynamic-form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <div class="ti-btn-list space-x-2 rtl:space-x-reverse">
+        <!-- <button type="button" class="ti-btn ti-btn-outline-primary ti-btn-wave">Primary</button>
+    <button type="button" class="ti-btn ti-btn-outline-secondary ti-btn-wave">Secondary</button> -->
+        <button type="button" cdkFocusInitial mat-dialog-close
+            class="ti-btn ti-btn-outline-success ti-btn-wave ti-btn-hover ti-btn-hover-animate">Save changes</button>
+        <button type="button" mat-dialog-close
+            class="ti-btn ti-btn-outline-danger ti-btn-wave ti-btn-hover ti-btn-hover-animate">Close</button>
+        <!-- <button type="button" class="ti-btn ti-btn-outline-warning ti-btn-wave">Warning</button>
+    <button type="button" class="ti-btn ti-btn-outline-info ti-btn-wave">Info</button>
+    <button type="button" class="ti-btn ti-btn-outline-light ti-btn-wave">Light</button>
+    <button type="button" class="ti-btn ti-btn-outline-dark ti-btn-wave">Dark</button> -->
+
+        <!-- <button type="button" class="ti-btn ti-btn-teal ti-btn-border-down border-0">Border</button>
+        <button type="button" class="ti-btn ti-btn-secondary ti-btn-border-start">Border</button>
+        <button type="button" class="ti-btn ti-btn-purple ti-btn-border-end">Border</button>
+        <button type="button" class="ti-btn ti-btn-warning ti-btn-border-top">Border</button>
+        <button type="button" class="ti-btn ti-btn-danger-full ti-btn-hover ti-btn-hover-animate">Like</button>
+        <button type="button" class="ti-btn ti-btn-success-full ti-btn-darken-hover">Hover</button>
+        <button type="button" class="ti-btn ti-btn-orange-full ti-btn-custom-border">Hover</button> -->
+    </div>
+
+</mat-dialog-actions>

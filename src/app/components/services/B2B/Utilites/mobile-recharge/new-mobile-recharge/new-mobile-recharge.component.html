@@ -1,0 +1,64 @@
+<div class="grid grid-cols-12 gap-6">
+    <div class="xl:col-span-3 col-span-12">
+        <div class="box">
+            <div class="box-body">
+                <app-dynamic-form [formConfig]="formConfig" [formName]="'Mobile Recharge'" [columnCount]="12"></app-dynamic-form>
+            </div>
+        </div>
+    </div>
+    <div class="xl:col-span-9 col-span-12">
+        <div class="box">
+            
+        <div class="xl:col-span-12 col-span-12">
+                <div class="box-body !p-0">
+                    <div class="md:flex px-4 py-6 items-center justify-between">
+                        <div>
+                            <h6 class="font-semibold mb-0 text-[1rem]">Plans</h6>
+                        </div>
+                        <div class="mt-2 md:mt-0">
+                            <nav class="-mb-0.5 sm:flex sm:space-x-6 rtl:space-x-reverse flex-wrap">
+                                <a class="w-full flex sm:w-auto active hs-tab-active:font-semibold  hs-tab-active:text-primary hs-tab-active:bg-primary/10 rounded-md py-2 px-3 text-sm" href="javascript:void(0);" id="alltasks-item" data-hs-tab="#all-tasks" aria-controls="all-tasks">
+                                    Full Talktime
+                                </a>
+                                <a class="w-full flex sm:w-auto hs-tab-active:font-semibold  hs-tab-active:text-primary hs-tab-active:bg-primary/10 rounded-md  py-2 px-3  text-sm" href="javascript:void(0);"  id="pending-item" data-hs-tab="#pending" aria-controls="pending">
+                                    Topup
+                                </a>
+                                <a class="w-full flex sm:w-auto hs-tab-active:font-semibold  hs-tab-active:text-primary hs-tab-active:bg-primary/10 rounded-md  py-2 px-3  text-sm" href="javascript:void(0);" id="in-progress-item" data-hs-tab="#in-progress" aria-controls="in-progress">
+                                    5G
+                                </a>
+                                <a class="w-full flex sm:w-auto hs-tab-active:font-semibold  hs-tab-active:text-primary hs-tab-active:bg-primary/10 rounded-md  py-2 px-3 text-sm" href="javascript:void(0);" id="completed-item" data-hs-tab="#completed" aria-controls="completed">
+                                    3G/4G
+                                </a>
+                                <a class="w-full flex sm:w-auto hs-tab-active:font-semibold  hs-tab-active:text-primary hs-tab-active:bg-primary/10 rounded-md  py-2 px-3 text-sm" href="javascript:void(0);" id="completed-item" data-hs-tab="#completed" aria-controls="completed">
+                                    2G
+                                </a>
+                                <a class="w-full flex sm:w-auto hs-tab-active:font-semibold  hs-tab-active:text-primary hs-tab-active:bg-primary/10 rounded-md  py-2 px-3 text-sm" href="javascript:void(0);" id="completed-item" data-hs-tab="#completed" aria-controls="completed">
+                                    SMS
+                                </a>
+                                <a class="w-full flex sm:w-auto hs-tab-active:font-semibold  hs-tab-active:text-primary hs-tab-active:bg-primary/10 rounded-md  py-2 px-3 text-sm" href="javascript:void(0);" id="completed-item" data-hs-tab="#completed" aria-controls="completed">
+                                    Combo
+                                </a>
+                                <a class="w-full flex sm:w-auto hs-tab-active:font-semibold  hs-tab-active:text-primary hs-tab-active:bg-primary/10 rounded-md  py-2 px-3 text-sm" href="javascript:void(0);" id="completed-item" data-hs-tab="#completed" aria-controls="completed">
+                                    Romaing
+                                </a>
+                              </nav>
+                        </div>
+                        <!-- <div class="mt-2 md:mt-0">
+                            <div class="hs-dropdown ti-dropdown">
+                                <button type="button" aria-label="button" class="ti-btn ti-btn-sm ti-btn-light !mb-0" aria-expanded="false">
+                                    <i class="ti ti-dots-vertical"></i>
+                                </button>
+                                <ul class="hs-dropdown-menu ti-dropdown-menu hidden">
+                                    <li><a class="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block" href="javascript:void(0);">Select All</a></li>
+                                    <li><a class="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block" href="javascript:void(0);">Share All</a></li>
+                                    <li><a class="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block" href="javascript:void(0);">Delete All</a></li>
+                                </ul>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+        </div>
+            <app-data-grid [tableDataSet]="rechargePlans" [tableConfig]="tableConfig" [tableWidth]="100"
+                [formName]="'Mobile Recharges Details'"></app-data-grid>
+        </div>
+    </div>

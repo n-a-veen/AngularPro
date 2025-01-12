@@ -1,0 +1,321 @@
+<div class="grid grid-cols-12 gap-x-6">
+    <div class="xl:col-span-12 col-span-12">
+        <div class="box">
+            <div class="box-header justify-between">
+                <div class="box-title">
+                   {{formName}}
+                </div>
+                <div class="flex items-center flex-wrap">
+                    @if(tableConfig.isSearchable) {
+                    <div class="me-3 my-1">
+                        <input class="ti-form-control form-control-sm" type="text" #input (keyup)="applyFilter($event)"
+                            placeholder="Search Here" aria-label=".form-control-sm example">
+                    </div>
+                    }
+                    <div class="hs-dropdown ti-dropdown py-1">
+                        <!-- <a href="javascript:void(0);"
+                            class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem] !m-0 !gap-0 !font-medium"
+                            aria-expanded="false">
+                            Sort By<i class="ri-arrow-down-s-line align-middle ms-1 inline-block"></i>
+                        </a>
+                        <ul class="hs-dropdown-menu ti-dropdown-menu hidden" role="menu">
+                            <li><a class="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
+                                    href="javascript:void(0);">New</a></li>
+                            <li><a class="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
+                                    href="javascript:void(0);">Popular</a></li>
+                            <li><a class="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
+                                    href="javascript:void(0);">Relevant</a></li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Datatable -->
+            <div class="box-body">
+                <div [class.scrollable-table]="tableConfig.isSearchable" [class.scrollable-table-height]="
+          !(
+            !tableDataSet ||
+            tableDataSet.length === 0 ||
+            tableDataSet.length === null ||
+            dataSet.filteredData.length === 0
+          )
+        " class="table-responsive">
+                    @if(tableConfig && tableDataSet){
+                    <table [class.padding-for-search]="tableConfig.isSearchable"
+                        [class.tablehover]="tableConfig.isRowClickable" mat-table [style.width.%]="tableWidth"
+                        [dataSource]="dataSet" matSort [matSortActive]="tableConfig.config?.sorting?.column"
+                        (matSortChange)="announceSortChange($event)" [fixedLayout]="true"
+                        class="table whitespace-nowrap table-bordered min-w-full">
+                        @for(col of columns; track col.field){
+                        <ng-container [matColumnDef]="col.name">
+                            <ng-container sticky="col.sticky">
+                                <!-- Table Headers -->
+                                @if(col.type === 'checkbox') {
+                                <th scope="col" class="text-start" mat-header-cell *matHeaderCellDef
+                                    [style.width.px]="col?.width!">
+                                    <mat-checkbox (change)="isAllSelected($event.checked)"
+                                        [checked]="selection.hasValue()" [indeterminate]="selection.hasValue()">
+                                    </mat-checkbox>
+                                </th>
+                                } @else {
+                                <th scope="col" class="text-start" mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [style.width.px]="col?.width!">
+                                    {{ col.name }}
+                                </th>
+                                }
+                                <!-- Checkbox Column -->
+                                @if(col.type === 'checkbox'){
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-checkbox (change)="
+                            $event ? selection.toggle(row) : null;
+                            someChecked(row, $event.checked)
+                          " [checked]="selection.isSelected(row)" [style.pointer-events]="
+                            row?.status === '1' || row?.status === '2' ? 'none' : ''
+                          " [disabled]="row?.status === '1' || row?.status === '2'">
+                                    </mat-checkbox>
+                                </td>
+                                }
+
+                                <!-- Table Columns  -->
+                                <td mat-cell *matCellDef="let e; let sno = index" class="verticalRow" (click)="
+                      tableConfig.isRowClickable || col.type === 'editable'
+                        ? e?.status === '1' || e?.status === '2'
+                          ? null
+                          : triggerRowClickEvent(e, sno)
+                        : null
+                    " [class.text-align-right]="
+                      col.type === 'currency' ||
+                      col.type === 'percent' ||
+                      col.type === 'number'
+                    " [class.ïsEditable]="col.type === 'editable'" [title]="
+                      tableConfig.messageTitles?.status1 && e?.status === '1'
+                        ? tableConfig.messageTitles?.status1
+                        : e?.status === '2'
+                        ? tableConfig.messageTitles?.status2
+                        : ''
+                    " [class.cursor-default]="e?.status === '1' || e?.status === '2'">
+                                    @if(tableConfig.edit === true) {
+                                    @if(col.type === undefined || col.type === 'input'){
+                                    <mat-form-field>
+                                        <input matInput name="row-control"
+                                            (input)="triggerUpdateRowEvent(e, sno, $event)" />
+                                    </mat-form-field>
+                                    }@else if(col.type === 'select') {
+                                    <mat-form-field>
+                                        <mat-select (ngModelChange)="triggerUpdateRowEvent(e, sno, $event)">
+                                            @for(opt of col.options; track opt.value) {
+                                            <mat-option [value]="opt.value">
+                                                {{ opt.title }}
+                                            </mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+                                    }
+                                    }
+                                    @if(tableConfig.edit !== true) {
+                                    @if(col.type === undefined || col.type === 'input'){
+                                    <span [style.color]="
+                          e?.status === '1'
+                            ? 'green'
+                            : e?.status === '2'
+                            ? 'rgba(0, 0, 0, 0.30)'
+                            : e?.status === '0' && e?.exceptionRemark === '1'
+                            ? 'red'
+                            : ''
+                        ">
+                                        {{
+                                        col.name === "#"
+                                        ? sno + 1
+                                        : e[col.field]
+                                        ? e[col.field]
+                                        : ""
+                                        }}
+                                    </span>
+                                    } @else if(col.type === 'button') {
+                                    <mat-icon aria-label="Edit" class="edit-icon delete"
+                                        fontSet="material-icons-outlined" (click)="delete(e)">
+                                        delete</mat-icon>
+
+                                    <mat-icon aria-label="Edit" (click)="edit(e)" fontSet="material-icons-outlined"
+                                        class="edit-icon">
+                                        edit</mat-icon>
+                                    }@else if(col.type === 'editable') {
+                                    <span class="flex space-between" [style.color]="
+                          e?.status === '1'
+                            ? 'green'
+                            : e?.status === '2'
+                            ? 'rgba(0, 0, 0, 0.30)'
+                            : e?.status === '0' && e?.exceptionRemark === '1'
+                            ? 'red'
+                            : ''
+                        ">
+                                        {{ e[col.field] ? e[col.field] : " " }}
+                                        @if(e[col.field]){
+                                        <mat-icon aria-label="Edit" fontSet="material-icons-outlined" class="edit-icon">
+                                            edit</mat-icon>
+                                        }
+                                    </span>
+                                    } @else if(col.type === 'currency'){
+                                    <span [style.color]="
+                          e?.status === '1'
+                            ? 'green'
+                            : e?.status === '2'
+                            ? 'rgba(0, 0, 0, 0.30)'
+                            : e?.status === '0' && e?.exceptionRemark === '1'
+                            ? 'red'
+                            : ''
+                        ">
+                                        {{ (e[col.field] ? +e[col.field] : "") }}
+                                    </span>
+                                    } @else if(col.type === 'number'){
+                                    <span [style.color]="
+                            e?.status === '1'
+                              ? 'green'
+                              : e?.status === '2'
+                              ? 'rgba(0, 0, 0, 0.30)'
+                              : e?.status === '0' && e?.exceptionRemark === '1'
+                              ? 'red'
+                              : ''
+                          ">
+                                        {{ e[col.field] ? e[col.field] : "" }}
+                                    </span>
+                                    } @else if(col.type === 'percent'){
+                                    <span [style.color]="
+                          e?.status === '1'
+                            ? 'green'
+                            : e?.status === '2'
+                            ? 'rgba(0, 0, 0, 0.30)'
+                            : e?.status === '0' && e?.exceptionRemark === '1'
+                            ? 'red'
+                            : ''
+                        ">
+                                        {{
+                                        (e[col.field] ? (e[col.field]) : "") + "%"
+                                        }}
+                                    </span>
+                                    } @else if (col.type === 'date') {
+                                    <span [style.color]="
+                            e?.status === '1'
+                              ? 'green'
+                              : e?.status === '2'
+                              ? 'rgba(0, 0, 0, 0.30)'
+                              : e?.status === '0' && e?.exceptionRemark === '1'
+                              ? 'red'
+                              : ''
+                          ">
+                                        {{ (e[col.field] ? e[col.field] : "") }}
+                                    </span>
+                                    } @else if (col.type === 'time') {
+                                    <span [style.color]="
+                            e?.status === '1'
+                              ? 'green'
+                              : e?.status === '2'
+                              ? 'rgba(0, 0, 0, 0.30)'
+                              : e?.status === '0' && e?.exceptionRemark === '1'
+                              ? 'red'
+                              : ''
+                          ">
+                                        {{ (e[col.field] ? e[col.field] : "") }}
+                                    </span>
+                                    }@else if (col.type === 'dateTime') {
+                                    <span [style.color]="
+                          e?.status === '1'
+                            ? 'green'
+                            : e?.status === '2'
+                            ? 'rgba(0, 0, 0, 0.30)'
+                            : e?.status === '0' && e?.exceptionRemark === '1'
+                            ? 'red'
+                            : ''
+                        ">
+                                        {{
+                                        (e[col.field] ? e[col.field] : "")
+                                        }}
+                                    </span>
+                                    } @else if (col.type === 'link') {
+                                    <span class="link" (click)="clickedOnLinked(e, sno)" [style.color]="
+                            e?.status === '1'
+                              ? 'green'
+                              : e?.status === '2'
+                              ? 'rgba(0, 0, 0, 0.30)'
+                              : e?.status === '0' && e?.exceptionRemark === '1'
+                              ? 'red'
+                              : ''
+                          ">
+                                        {{ e[col.field] ? e[col.field] : "-" }}
+                                    </span>
+                                    }@else if (col.type === 'dialog') {
+                                    <span [title]="e[col.field]">
+                                        {{ e[col.field] ? e[col.field] : "" }}
+                                        <mat-icon aria-label="Edit" fontSet="material-icons-outlined" class="edit-icon"
+                                            (click)="edit(e)">
+                                            edit</mat-icon>
+                                    </span>
+                                    }@else if(col.type === 'select'){
+                                    <span [title]="
+                            e[col.field]
+                              ? col.optionValueField
+                                ? e[col.field][col.optionValueField]
+                                : e[col.field]
+                              : ''
+                          ">
+                                        {{
+                                        e[col.field]
+                                        ? col.optionValueField
+                                        ? e[col.field][col.optionValueField]
+                                        : e[col.field]
+                                        : ""
+                                        }}
+                                    </span>
+                                    }
+                                    }
+                                    <!-- Table interaction config can be send from parent -->
+                                    @if(col.name === 'Action' && tableConfig.handlers){
+                                    <div class="flex flex-row items-center !gap-2 text-[0.9375rem]">
+                                        @for(c of tableConfig.handlers; track c.title){
+                                        <button aria-label="anchor" [title]="c.title"
+                                            (click)="([c.action !== undefined ? c.action : null])"
+                                            class="ti-btn  ti-btn-wave  !gap-0 !m-0 !h-[1.75rem] !w-[1.75rem] text-[0.8rem] bg-{{c.type}}/10 text-{{c.type}} hover:bg-{{c.type}} hover:text-white hover:border-{{c.type}}"><i
+                                                class={{c.icon}}></i></button>
+                                        }
+                                    </div>
+                                    }
+
+                                </td>
+                            </ng-container>
+                        </ng-container>
+                        }
+                        <!-- Table Headers Row -->
+                        <tr mat-header-row *matHeaderRowDef="flatColumns" style="text-align: center"></tr>
+                        <!-- Table Body Rows -->
+                        <ng-container>
+                            <tr mat-row *matRowDef="let row; columns: flatColumns; let r = index"
+                                matTooltipClass="tooltip-class" matTooltipPosition="above"
+                                (click)="isCheckboxClicked ? clickedRows.add(row) : null"
+                                [class.bold]="tableConfig.isRowClickable && clickedRows.has(row)"
+                                class="border-t border-defaultborder dark:border-defaultborder/10"></tr>
+                        </ng-container>
+                    </table>
+                    }
+                </div>
+                @if( !tableDataSet ||
+                tableDataSet.length === 0 ||
+                tableDataSet.length === null ||
+                dataSet.filteredData.length === 0) {
+                <div class="no-data">
+                    Data Not Available
+                </div>
+                }
+                <!-- Pagination Control -->
+                @if(dataSet.data.length > 0){
+                <mat-paginator class="sticky-paginator" [pageIndex]="tableConfig.pagination?.page"
+                    (page)="paginationEvent.emit($event)" [length]="tableConfig.pagination?.totalRecords"
+                    showFirstLastButtons [pageSizeOptions]="[5, 10, 15, 30, 50, 75, 100]" [pageSize]="
+            tableConfig.config?.pageSize ? tableConfig.config?.pageSize : 10
+          ">
+                </mat-paginator>
+                }
+            </div>
+        </div>
+    </div>
+</div>

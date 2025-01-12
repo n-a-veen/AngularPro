@@ -1,0 +1,152 @@
+@if(dynamicForm) {
+<div class="grid grid-cols-12 gap-6 text-defaultsize">
+    <div class="xl:col-span-12 col-span-12">
+        <div class="box">
+            <div class="box-header justify-between">
+                <div class="box-title">{{formName}}</div>
+                <button type="submit" class="ti-btn ti-btn-primary" (click)="onSubmit()">Submit</button>
+            </div>
+            <div class="box-body">
+                <form [formGroup]="dynamicForm">
+                    <div class="grid grid-cols-12 sm:gap-6">
+                        @for(field of formConfig.fields; track field.id){
+                        <div class="xl:col-span-{{columnCount}} lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+                            @if(field.label) {
+                            <label [for]="field.id" class="form-label">{{ field.label }}</label>
+                            }
+                            @if(field.type === 'textarea') {
+                            <!-- Textarea -->
+                            <textarea [formControlName]="field.id" [id]="field.id" [placeholder]="field.placeholder"
+                                [class]="field.class" rows="3" [required]="field.validators![0].isRequired"></textarea>
+                            }@else if(field.type === 'checkbox') {
+                            <!-- Checkbox -->
+                            <div class="form-check">
+                                <input [formControlName]="field.id" [id]="field.id" [class]="field.class"
+                                    type="checkbox" [required]="field.validators![0].isRequired" />
+                                <label [for]="field.id">{{ field.label }}</label>
+                            </div>
+                            }@else if(field.type === 'radio') {
+                            <!-- Radio -->
+                            <ul class="flex flex-col sm:flex-row">
+                                @for(option of field.options; track option.label){
+                                <li
+                                    class="ti-list-group w-full gap-x-2.5 py-2 px-4 bg-white dark:bg-bodybg border text-gray-800 sm:-ms-px sm:mt-0 !rounded-e-none dark:bg-bgdark dark:border-white/10 dark:text-white">
+                                    <div class="relative flex items-start w-full">
+                                        <div class="flex items-center h-5">
+                                            <input [formControlName]="field.id" [id]="option.label"
+                                                [value]="option.value" type="radio"
+                                                [required]="field.validators![0].isRequired" class="ti-form-radio">
+                                        </div>
+                                        <label [for]="option.label"
+                                            class="ms-3 block w-full text-sm text-gray-600 dark:text-[#8c9097] dark:text-white/50">
+                                            {{ option.label }}
+                                        </label>
+                                    </div>
+                                </li>
+                                }
+                            </ul>
+                            } @else if(field.type === 'dropdown') {
+                            <!-- Dropdown -->
+                            <ng-select class="rounded-sm" [formControlName]="field.id" [id]="field.id"
+                                [class]="field.class" [required]="field.validators![0].isRequired">
+                                @for(option of field.options; track option.label){
+                                <ng-option [value]="option.value">{{ option.label }}</ng-option>
+                                }
+                            </ng-select>
+                            }@else if(field.type === 'multiselect') {
+                            <!-- Multiselect -->
+                            <ng-select class="form-control" placeholder="Type to Add" [items]="field.options!"
+                                [required]="field.validators![0].isRequired" [formControlName]="field.id"
+                                [id]="field.id" [class]="field.class" [hideSelected]="true" [multiple]="true"
+                                bindLabel="label">
+                            </ng-select>
+                            } @else if(field.type === 'file') {
+                            <!-- File -->
+                            <input [formControlName]="field.id" [id]="field.id" [class]="field.class"
+                                [required]="field.validators![0].isRequired" type="file" />
+                            } @else if(field.type === 'date') {
+                            <!-- Date Picker -->
+                            <div class="input-group">
+                                <div class="input-group-text text-[#8c9097] dark:text-white/50"> <i
+                                        class="ri-calendar-line"></i> </div>
+                                <input type="text" class="form-control" [required]="field.validators![0].isRequired"
+                                    [formControlName]="field.id" [id]="field.id" [class]="field.class"
+                                    placeholder="Date" mwlFlatpickr [altInput]="true" [convertModelValue]="true">
+                            </div>
+                            } @else if(field.type === 'dateRange') {
+                            <!-- Date Range Picker -->
+                            <div class="input-group">
+                                <div class="input-group-text text-[#8c9097] dark:text-white/50"> <i
+                                        class="ri-calendar-line"></i> </div>
+                                <input class="form-control" [required]="field.validators![0].isRequired"
+                                    placeholder="Date range picker" mwlFlatpickr [altInput]="true"
+                                    [convertModelValue]="true" mode="range" [formControlName]="field.id" [id]="field.id"
+                                    [class]="field.class" />
+                            </div>
+                            }@else if(field.type === 'time') {
+                            <!-- Time Picker -->
+                            <div class="input-group">
+                                <div class="input-group-text text-[#8c9097] dark:text-white/50"> <i
+                                        class="ri-time-line"></i> </div>
+                                <input class="form-control" [required]="field.validators![0].isRequired"
+                                    placeholder="Choose time" type="text" mwlFlatpickr [formControlName]="field.id"
+                                    [id]="field.id" [class]="field.class" [noCalendar]="true" [enableTime]="true"
+                                    [dateFormat]="'h:i K'" />
+                            </div>
+                            }@else if(field.type === 'dateTime') {
+                            <!-- date Time Picker -->
+                            <div class="input-group">
+                                <div class="input-group-text text-[#8c9097] dark:text-white/50"> <i
+                                        class="ri-time-line"></i> </div>
+                                <input class="form-control" [required]="field.validators![0].isRequired"
+                                    placeholder="Choose time between 16:00 and 22:30" type="text" mwlFlatpickr
+                                    [formControlName]="field.id" [id]="field.id" [class]="field.class"
+                                    [enableTime]="true" [convertModelValue]="true" [dateFormat]="'Y-m-d H:i'" />
+                            </div>
+                            }@else if(field.type === 'password') {
+                            <!-- Input Fields -->
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="ri-lock-line"></i></div>
+                                <input type="password" [attr.type]="field.type" [formControlName]="field.id"
+                                    [id]="field.id" [placeholder]="field.placeholder" [class]="field.class"
+                                    [required]="field.validators![0].isRequired">
+                            </div>
+                            } @else if(field.type === 'email') {
+                            <!-- Input Fields -->
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="ri-mail-line"></i></div>
+                                <input type="email" [attr.type]="field.type" [formControlName]="field.id"
+                                    [id]="field.id" [placeholder]="field.placeholder" [class]="field.class"
+                                    [required]="field.validators![0].isRequired">
+                            </div>
+                            }@else if(field.type === 'url') {
+                            <!-- Input Fields -->
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="ri-bookmark-2-fill"></i></div>
+                                <input [attr.type]="field.type" [formControlName]="field.id"
+                                    [id]="field.id" [placeholder]="field.placeholder" [class]="field.class"
+                                    [required]="field.validators![0].isRequired">
+                            </div>
+                            } @else {
+                            <!-- Input Fields -->
+                            <input [attr.type]="field.type" [formControlName]="field.id" [id]="field.id"
+                                [placeholder]="field.placeholder" [class]="field.class"
+                                [required]="field.validators![0].isRequired" />
+                            }
+                            @if( dynamicForm.controls[field.id].invalid &&
+                            (dynamicForm.controls[field.id].dirty ||
+                            dynamicForm.controls[field.id].touched)){
+                            <!-- @for(option of field.validators; track option.message){ -->
+                            <div class="text-danger">{{field.label}} is Required</div>
+                            }
+                            <!-- } -->
+                        </div>
+                        }
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+}
